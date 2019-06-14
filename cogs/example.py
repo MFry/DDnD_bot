@@ -9,7 +9,7 @@ class Example(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        print('Example cog is loaded')
+        print('Example *cog* is loaded')
 
     @commands.command()
     async def ping(self, ctx):
