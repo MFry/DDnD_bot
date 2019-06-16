@@ -1,6 +1,7 @@
 import discord, os
 from discord.ext import tasks, commands
 from datetime import datetime, timedelta
+from utils.message_helper import has_bot_sent_this_message
 
 FRIDAY = 4
 SATURDAY = 5
@@ -22,22 +23,27 @@ class SessionOrganizer(commands.Cog):
         for server in self.client.guilds:
             if server.name.lower() == "lambda legends":
                 self.main_channel = discord.utils.get(server.channels, name=self.announcement_channel)
-        await self.main_channel.send('I live again!')
-        self.read_and_store_last_session()
+        message = 'I live again!'
+        if not await has_bot_sent_this_message(self.client, self.main_channel, message, timedelta(minutes=10)):
+            await self.main_channel.send(message)
         self.group_reminder.start()
-        await self.send_last_session()
 
     @tasks.loop(minutes=30)
     async def group_reminder(self):
         await self.client.wait_until_ready()
-
         if datetime.now().weekday() == FRIDAY:
-            await self.main_channel.send('**Reminder:** DnD session this weekend.')
-        if datetime.now().weekday() == SATURDAY:
-            await self.main_channel.send('**Reminder:** DnD session starts tomorrow at 14:00')
+            message = '**Reminder:** DnD session this weekend.'
+            if not await has_bot_sent_this_message(self.client, self.main_channel, message):
+                await self.main_channel.send(message)
+        elif datetime.now().weekday() == SATURDAY:
+            message = '**Reminder:** DnD session starts tomorrow at 14:00'
+            if not await has_bot_sent_this_message(self.client, self.main_channel, message):
+                await self.main_channel.send(message)
         elif datetime.now().weekday() == SUNDAY and datetime.now().hour == HOUR_BEFORE_EVENT:
-            await self.main_channel.send('---\n*Next session starts within the hour.*\n---')
-            await self.send_last_session()
+            message = '---\n*Next session starts within the hour.*\n---'
+            if not await has_bot_sent_this_message(self.client, self.main_channel, message):
+                await self.main_channel.send(message)
+                await self.send_last_session()
 
     async def send_last_session(self):
         await self.client.wait_until_ready()
@@ -49,9 +55,9 @@ class SessionOrganizer(commands.Cog):
         file_name = 'last_session.md'
         last_session_file_name = f'{location}{file_name}'
         if os.path.isfile(last_session_file_name):
-            self.last_session = open(f'{location}{file_name}', 'r').read()
+            self.last_session = open(last_session_file_name, 'r').read()
             last_session_timestamp = datetime.now() + timedelta(weeks=-1)
-            os.rename(f'{location}{file_name}', f'{location}{last_session_timestamp}.md')
+            os.rename(last_session_file_name, f'{location}{str(last_session_timestamp).replace(":","-")}.md')
         else:
             print('No new session file')
 
