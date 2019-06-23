@@ -1,4 +1,4 @@
-env
+env_config
 token
 
 ## Intellij ##
@@ -37,8 +37,8 @@ MANIFEST
 # Environments
 .env
 .venv
-env/
+env_config/
 venv/
-ENV/
+env_config/
 env.bak/
 venv.bak/

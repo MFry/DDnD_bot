@@ -1,0 +1,27 @@
+{
+  "bot": {
+    "activities": "Dungeons and Robots"
+  },
+  "server": {
+    "name": "Critical Troll",
+    "channels": {
+      "announcement": "general",
+      "bot_channel": "bot"
+    }
+  },
+  "test_server": {
+    "name": "Lambda Legends",
+    "channels": {
+      "announcement": "general"
+    }
+  },
+  "dnd": {
+    "session": {
+      "start_time": "1400 PST",
+      "reminderTwoDaysBefore": "DnD session scheduled for this weekend.",
+      "reminderOneDayBefore": "DnD session starts tomorrow @ {}!",
+      "recentSessionFileLocation": "./session_history/",
+      "recentSessionFile": "last_session.md"
+    }
+  }
+}
