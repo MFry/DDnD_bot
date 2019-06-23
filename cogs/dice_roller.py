@@ -2,9 +2,11 @@ import discord
 from discord.ext import commands
 import random
 
-#Accepts an arbitrary number and type of dice as input of the form xdy, where 'x'
-#is the integer number of dice and 'y' is the integer number of faces on each die.
-#d is a delimiter.
+"""
+Accepts an arbitrary number and type of dice as input of the form xdy, where 'x'
+is the integer number of dice and 'y' is the integer number of faces on each die.
+d is a delimiter.
+"""
 
 class DiceRoller(commands.Cog):
     def __init__(self, client):
