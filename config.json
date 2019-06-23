@@ -1,6 +1,8 @@
 {
   "bot": {
-    "activities": "Dungeons and Robots"
+    "activities": "Dungeons and Robots",
+    "author": "Michal Frystacky",
+    "description": "Best bot out in the wild."
   },
   "server": {
     "name": "Critical Troll",

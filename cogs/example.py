@@ -18,15 +18,14 @@ class Example(commands.Cog):
     @commands.command()
     async def info(self, ctx):
         """
-
-        :param ctx:
-        :return:
+         Returns bot info as an embedded message
+        :param ctx: discord.py given context
         """
-        embed = discord.Embed(title="DnD bot", description="Nicest bot there is ever.", color=0xeee657)
-
+        description = self.bot.config["bot"]["description"]
+        author = self.bot.config["bot"]["author"]
+        embed = discord.Embed(title="DnD bot", description=description, color=0xeee657)
         # give info about you here
-        embed.add_field(name="Author", value="Michal Frystacky")
-
+        embed.add_field(name="Author", value=author)
         # Shows the number of servers the bot is member of.
         embed.add_field(name="Server count", value=f"{len(self.bot.guilds)}")
 

@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 
 
-class Example(commands.Cog):
+class Initiative(commands.Cog):
     initiatives = []
     current_initiative = 0
     current_round = 1
@@ -18,19 +18,24 @@ class Example(commands.Cog):
     async def set_initiative(self, ctx, *args):
         """
          Sets initial combat initiative
-        :param ctx:
-        :return:
+        :param args: space separated tuples of {name} {initiative_value}...
+        ::
+            # example
+            !si me 20 you 1
         """
         it = iter(args)
         self.initiatives.extend(zip(it, it))
+        self.initiatives = sorted(self.initiatives, key=lambda x: x[1], reverse=True)
         await ctx.send('Set initiative')
+
+    def _sort_initiatives(self):
+        pass
 
     @commands.command(name="ni")
     async def next_initiative(self, ctx):
         """
          Moves to the next entities turn
-        :param ctx:
-        :return:
+        :returns the name of the next entity and its initiative
         """
         init = self.initiatives
         i = self.current_initiative
@@ -47,8 +52,6 @@ class Example(commands.Cog):
     async def reset_initiative(self, ctx):
         """
          Ends initiative
-        :param ctx:
-        :return:
         """
         self.initiatives = []
         self.current_initiative = 0
@@ -56,4 +59,4 @@ class Example(commands.Cog):
 
 
 def setup(client):
-    client.add_cog(Example(client))
+    client.add_cog(Initiative(client))
