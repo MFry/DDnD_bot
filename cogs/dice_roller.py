@@ -18,7 +18,10 @@ class DiceRoller(commands.Cog):
     async def roll(self, ctx, dice: str):
         """
         Rolls an arbitrary number of dice with an arbitrary number of sides
-        :param dice: String of the form xdy, where x is the integer number of dice, and y is the integer number of sides per dice.
+        :param dice: String of the form xdy, where x is the number of dice, and y is the number of sides per dice.
+        ::
+            #example
+            !roll 3d20
         """
         cleaned_dice = dice.lower()
         dice_list = cleaned_dice.split('d')
