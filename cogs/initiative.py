@@ -1,9 +1,11 @@
 import discord
 from discord.ext import commands
+from bisect import bisect_left
 
 
 class Initiative(commands.Cog):
     initiatives = []
+    temp_initiatives = []
     current_initiative = 0
     current_round = 1
 
@@ -14,44 +16,70 @@ class Initiative(commands.Cog):
     async def on_ready(self):
         print('Initiative *cog* is loaded')
 
-    @commands.command(name="si")
+    @staticmethod
+    def _sort_initiatives(to_sort):
+        return sorted(to_sort, key=lambda x: x[1], reverse=True)
+
+    @commands.command(name="setInitiative", aliases=["si"])
     async def set_initiative(self, ctx, *args):
         """
          Sets initial combat initiative
         :param args: space separated tuples of {name} {initiative_value}...
+        :aliases: si
         ::
             # example
             !si me 20 you 1
         """
         it = iter(args)
-        self.initiatives.extend(zip(it, it))
-        self.initiatives = sorted(self.initiatives, key=lambda x: x[1], reverse=True)
+        self.initiatives.extend(self._sort_initiatives(zip(it, it)))
         await ctx.send('Set initiative')
 
-    def _sort_initiatives(self):
-        pass
+    @commands.command(name="addInitiative", aliases=["ai"])
+    async def add_initiative(self, ctx, *args):
+        """
+         Add additional entities to the current combat round
+        :param args: space separated tuples of {name} {initiative_value}...
+        :aliases: ai
+        """
+        it = iter(args)
+        self.temp_initiatives = self._sort_initiatives(zip(it, it))
 
-    @commands.command(name="ni")
+    @commands.command(name="nextInitiative", aliases=["ni"])
     async def next_initiative(self, ctx):
         """
          Moves to the next entities turn
+        :aliases: ni
         :returns the name of the next entity and its initiative
         """
-        init = self.initiatives
+        NAME = 0
+        INIT = 1
         i = self.current_initiative
+        if i > len(self.initiatives):
+            entity = self.initiatives[-1]
+        else:
+            entity = self.initiatives[i]
+        if self.temp_initiatives:
+            if entity[INIT] < self.temp_initiatives[0][INIT]:
+                new_entity = self.temp_initiatives.pop(0)
+                self.initiatives.append(new_entity)
+                self.initiatives = self._sort_initiatives(self.initiatives)
+                i = bisect_left(self.initiatives, entity) - 1
+                entity = new_entity
         if i >= len(self.initiatives):
             await ctx.send('-'*10)
             await ctx.send(' Round is over')
             await ctx.send('-' * 10)
             self.current_round += 1
             i = 0
+            entity = self.initiatives[i]
         self.current_initiative = i + 1
-        await ctx.send(f'{init[i][0]} is up. Initiative: {init[i][1]}')
+        await ctx.send(f'{entity[NAME]} is up. Initiative: {entity[INIT]}')
 
-    @commands.command(name="ei")
-    async def reset_initiative(self, ctx):
+    @commands.command(name="endInitiative", aliases=["ei"])
+    async def end_initiative(self, ctx):
         """
          Ends initiative
+        :aliases: ei
         """
         self.initiatives = []
         self.current_initiative = 0

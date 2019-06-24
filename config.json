@@ -20,6 +20,7 @@
   "dnd": {
     "session": {
       "start_time": "1400 PST",
+      "hour_before_session": 13,
       "reminderTwoDaysBefore": "DnD session scheduled for this weekend.",
       "reminderOneDayBefore": "DnD session starts tomorrow @ {}!",
       "recentSessionFileLocation": "./session_history/",
