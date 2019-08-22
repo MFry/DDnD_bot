@@ -27,17 +27,20 @@ class DiceRoller(commands.Cog):
         """
         cleaned_dice = dice.lower()
         dice_list = cleaned_dice.split('d')
-        if not dice_list[0]:                                                    #handle inputs of the type 'dy', with implied dice number equal to 1
+        #handle inputs of the type 'dy', with implied dice number equal to 1
+        if not dice_list[0]:
             dice_number = 1
         else:
             dice_number = int(dice_list[0])
         dice_type = int(dice_list[1])
-        if dice_number == 1:                                                    #generate a single dice roll and send
+        #generate a single dice roll and send
+        if dice_number == 1:
             dice_total = random.randint(1, dice_type)
             await ctx.send(
                 f'*{ctx.message.author} rolls {dice} for {dice_total}*'
             )
-        elif dice_number > 1:                                                   #generate x number of dice rolls, send the individual rolls and sum
+        #generate x number of dice rolls, send the individual rolls and sum
+        elif dice_number > 1:
             result = []
             dice_total = 0
             ii = 0
@@ -49,7 +52,8 @@ class DiceRoller(commands.Cog):
             await ctx.send(
                 f'*{ctx.message.author} rolls {dice} for: {rolls}; a total of {dice_total}*'
             )
-        else:                                                                   #handle invalid inputs
+        #handle invalid inputs
+        else:
             await ctx.send(
                 f'*{ctx.message.author} rolls a non-physical number of dice and takes 5 damage*'
             )
