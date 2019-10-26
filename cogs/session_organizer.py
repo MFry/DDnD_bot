@@ -17,7 +17,7 @@ class SessionOrganizer(commands.Cog):
         self.last_session = ''
         self.dnd_config = self.bot.config["dnd"]["session"]
         self.announcement_channel = self.bot.config["server"]["channels"]["announcement"]
-        self.dnd_server = self.bot.config["test_server"]["name"]
+        self.dnd_server = self.bot.config["server"]["name"]
         location = './session_history/'
         file_name = 'last_session.md'
         self.file_name = f'{location}{file_name}'
@@ -33,7 +33,6 @@ class SessionOrganizer(commands.Cog):
         #     await self.main_channel.send(message)
         print('Session Organizer *cog* is loaded')
         await self.post_last_session()
-        self.group_reminder.start()
 
     @tasks.loop(minutes=30)
     async def group_reminder(self):
@@ -50,7 +49,7 @@ class SessionOrganizer(commands.Cog):
             if not await has_bot_sent_this_message(self.bot, self.main_channel, message):
                 await self.main_channel.send(message)
         elif datetime.now().weekday() == SUNDAY and datetime.now().hour == HOUR_BEFORE_EVENT:
-            message = f'---\n*Next session starts at {START_TIME}.*\n---'
+            message = f'**[** *Next session starts at {START_TIME}.* **]**'
             if not await has_bot_sent_this_message(self.bot, self.main_channel, message):
                 await self.main_channel.send(message)
                 await self.post_last_session()
@@ -89,7 +88,7 @@ class SessionOrganizer(commands.Cog):
     def open_last_session(self):
         last_session_file_name = self.file_name
         if os.path.isfile(last_session_file_name):
-            self.last_session = open(last_session_file_name, 'r').read()
+            self.last_session = open(last_session_file_name, 'r', encoding='utf-8').read()
             return True
         else:
             print('No new session file')
