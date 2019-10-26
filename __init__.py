@@ -17,7 +17,6 @@ async def unload(ctx, extension):
     bot.unload_extension(f'cogs.{extension}')
     ctx.send(f'**cog {extension} is unloaded.**')
 
-
 for filename in os.listdir('./cogs'):
     if not filename.startswith('_') and filename.endswith('.py'):
         test = filename[:-3]
